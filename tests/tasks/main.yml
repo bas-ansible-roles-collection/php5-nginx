@@ -1,0 +1,26 @@
+---
+# Tests this bridging-role is correctly applied
+
+# Management and configuration checks
+# These checks mirror individual tasks to ensure they execute correctly
+# (I.e. that they create a user in the right package or create the correct config file)
+
+# Core configuration
+
+- include: register-role.yml
+
+# Registration checks
+# This check ensures the Ansible local facts set by this role when it has been applied exist and use the correct value
+
+- action: setup
+
+- name: assert role was applied via BARC manifest
+  assert:
+    that:
+      - "ansible_local.barc_php5_nginx.general.role_applied == 'true'"
+
+# Functionality checks
+# These checks need to run after the package or service has been configured to ensure it is working correctly,
+# using an configuration that may have been set by this role.
+
+# There are no functionality checks for this role

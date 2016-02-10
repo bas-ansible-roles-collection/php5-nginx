@@ -1,0 +1,31 @@
+# This is an Ansible inventory file. It inherits from /etc/ansible/hosts if it exists
+# It organises hosts/nodes into logical groups which can then be used in playbooks
+
+# This inventory is for all environments
+
+# It is best practice to group hosts by location and purpose like so:
+
+[local]
+localhost
+
+[vagrant-test]
+barc-php5-nginx-test-ubuntu-bare.v.m
+barc-php5-nginx-test-centos-bare.v.m
+
+[vagrant:children]
+vagrant-test
+
+
+[ubuntu]
+barc-php5-nginx-test-ubuntu-bare.v.m
+
+[centos]
+barc-php5-nginx-test-centos-bare.v.m
+
+
+[barc-php5-nginx-test-bare]
+barc-php5-nginx-test-ubuntu-bare.v.m
+barc-php5-nginx-test-centos-bare.v.m
+
+[barc-php5-nginx-test-nodes:children]
+barc-php5-nginx-test-bare

@@ -1,0 +1,57 @@
+---
+# Specify any Ansible roles used in playbooks used in this project here.
+# The order roles are listed in this file does not matter, this is set within playbooks.
+
+# For roles available on Ansible Galaxy you do not need to install dependencies, they will be downloaded for you.
+# For other roles, you will need to manually resolve any dependencies by listing them in this file.
+
+# See: http://docs.ansible.com/ansible/galaxy.html for more information.
+
+# Unlike projects, role dependencies are not pinned to ensure roles always work with the latest role versions.
+
+#- src: bas-ansible-roles-collection.system-core
+
+# Note: The 'bas-ansible-roles-collection.system-core' role is currently unavailable through Ansible Galaxy.
+# Until this bug is resolved, this role is referenced directly from GitHub as a workaround.
+#
+# Source: https://jira.ceh.ac.uk/browse/BARC-105
+
+- src: https://github.com/bas-ansible-roles-collection/system-core
+  name: bas-ansible-roles-collection.system-core
+
+#- src: bas-ansible-roles-collection.php5
+
+# Note: The 'bas-ansible-roles-collection.php5' role is currently unavailable through Ansible Galaxy.
+# Until this bug is resolved, this role is referenced directly from GitHub as a workaround.
+#
+# Source: https://jira.ceh.ac.uk/browse/BARC-105
+
+- src: https://github.com/bas-ansible-roles-collection/php5
+  name: bas-ansible-roles-collection.php5
+
+#- src: bas-ansible-roles-collection.nginx
+
+# Note: The 'bas-ansible-roles-collection.nginx' role is currently unavailable through Ansible Galaxy.
+# Until this bug is resolved, this role is referenced directly from GitHub as a workaround.
+#
+# Source: https://jira.ceh.ac.uk/browse/BARC-105
+
+- src: https://github.com/bas-ansible-roles-collection/nginx
+  name: bas-ansible-roles-collection.nginx
+
+# Role dependencies are also manually specified here until Ansible Galaxy can be used to resolve these automatically.
+
+- src: https://github.com/bas-ansible-roles-collection/system-security
+  name: bas-ansible-roles-collection.system-security
+
+- src: https://github.com/bas-ansible-roles-collection/system-ssh
+  name: bas-ansible-roles-collection.system-ssh
+
+- src: https://github.com/bas-ansible-roles-collection/system-firewall
+  name: bas-ansible-roles-collection.system-firewall
+
+- src: https://github.com/bas-ansible-roles-collection/system-hostname
+  name: bas-ansible-roles-collection.system-hostname
+
+- src: https://github.com/bas-ansible-roles-collection/system-users
+  name: bas-ansible-roles-collection.system-users

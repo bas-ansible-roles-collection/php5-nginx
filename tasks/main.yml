@@ -1,0 +1,6 @@
+---
+# tasks file for php5-nginx (bridging-role)
+
+- include: register-role.yml
+  tags:
+    - BARC_ROLE_REGISTRATION
