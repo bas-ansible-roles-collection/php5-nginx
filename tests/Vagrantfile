@@ -48,6 +48,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     node.vm.box = "antarctica/centos7"  # Define operating system
 
     node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "bare" + "." + domain_name  # Define hostname
+  end
+
+  config.vm.define hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "system-only" + "." + domain_name do |node|
+
+    node.vm.box = "antarctica/trusty"  # Define operating system
+
+    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "ubuntu"  + "-" + "system-only" + "." + domain_name  # Define hostname
+  end
+
+  config.vm.define hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "system-only" + "." + domain_name do |node|
+
+    node.vm.box = "antarctica/centos7"  # Define operating system
+
+    node.vm.hostname = hostname_project + "-" + hostname_environment + "-" + "centos"  + "-" + "system-only" + "." + domain_name  # Define hostname
+
+
 
     # Provision using ansible
       # Due to a bug[1] in Vagrant this block MUST be in the LAST VM specified in this Vagrantfile

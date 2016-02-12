@@ -11,6 +11,8 @@ localhost
 [vagrant-test]
 barc-php5-nginx-test-ubuntu-bare.v.m
 barc-php5-nginx-test-centos-bare.v.m
+barc-php5-nginx-test-ubuntu-system-only.v.m
+barc-php5-nginx-test-centos-system-only.v.m
 
 [vagrant:children]
 vagrant-test
@@ -18,14 +20,21 @@ vagrant-test
 
 [ubuntu]
 barc-php5-nginx-test-ubuntu-bare.v.m
+barc-php5-nginx-test-ubuntu-system-only.v.m
 
 [centos]
 barc-php5-nginx-test-centos-bare.v.m
+barc-php5-nginx-test-centos-system-only.v.m
 
 
 [barc-php5-nginx-test-bare]
 barc-php5-nginx-test-ubuntu-bare.v.m
 barc-php5-nginx-test-centos-bare.v.m
 
+[barc-php5-nginx-system-packages-only]
+barc-php5-nginx-test-ubuntu-system-only.v.m
+barc-php5-nginx-test-centos-system-only.v.m
+
 [barc-php5-nginx-test-nodes:children]
 barc-php5-nginx-test-bare
+barc-php5-nginx-system-packages-only

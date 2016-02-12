@@ -4,3 +4,6 @@
 # BARC specific variables
 php5_nginx_barc_role_name: php5_nginx
 php5_nginx_barc_role_version: 0.1.0
+
+BARC_use_non_system_package_sources: true
+

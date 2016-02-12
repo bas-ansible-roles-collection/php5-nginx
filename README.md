@@ -73,6 +73,16 @@ convenience as specifying the bridging role in a playbook will, through role dep
 More information is available in the 
 [BARC General Documentation](https://antarctica.hackpad.com/BARC-Overview-and-Policies-SzcHzHvitkt#:h=Bridging-roles)
 
+### Non-system packages
+
+It is a convention of BARC roles to use the latest version of packages. Where a suitable non-system package source is 
+available it will be used. Suitable non-system packages require a reputable, maintainer, typically a company or well 
+respected individual. If this is for some reason unsuitable, it is possible to only use system packages by setting the 
+*BARC_use_non_system_package_sources* variable to `false`.
+
+Note: As the package policy varies between system and non-system package sources, and between operating systems, the 
+version of installed packages is variable.
+
 ### Tags
 
 BARC roles use standardised tags to control which aspects of an environment are changed by roles.
