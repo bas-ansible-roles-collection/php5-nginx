@@ -12,7 +12,7 @@ Bridging role to use PHP 5 with Nginx using PHP-FPM
 
 ## Overview
 
-* TODO
+* Installs the latest stable version of PHP-FPM from non-system, or optionally, from system only sources
 
 ## Quality Assurance
 

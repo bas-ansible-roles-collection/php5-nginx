@@ -1,6 +1,11 @@
 ---
 # tasks file for php5-nginx (bridging-role)
 
+- include: install-php-fpm.yml
+  tags:
+    - BARC_INSTALL
+    - BARC_INSTALL_PACKAGES
+
 - include: register-role.yml
   tags:
     - BARC_ROLE_REGISTRATION

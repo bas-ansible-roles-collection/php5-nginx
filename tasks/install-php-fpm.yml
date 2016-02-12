@@ -1,0 +1,48 @@
+---
+# Install PHP-FPM
+
+# If using non-system sources (preferred)
+
+- name: install PHP-FPM for PHP 5 from non-system sources - CentOS
+  yum:
+             pkg={{ item }}
+    update_cache=yes
+           state=present
+  with_items:
+  - php56w-fpm
+  when: ansible_distribution == "CentOS" and
+    (BARC_use_non_system_package_sources == true or BARC_use_non_system_package_sources == 'True')
+
+- name: install PHP-FPM for PHP 5 from non-system sources - Ubuntu
+  apt:
+                 pkg={{ item }}
+        update_cache=yes
+    cache_valid_time=3600
+               state=present
+  with_items:
+  - php5-fpm
+  when: ansible_distribution == "Ubuntu" and
+    BARC_use_non_system_package_sources == true or BARC_use_non_system_package_sources == 'True'
+
+# If using system-sources only
+
+- name: install PHP-FPM for PHP 5 from system sources - CentOS
+  yum:
+                 pkg={{ item }}
+        update_cache=yes
+               state=present
+  with_items:
+    - php-fpm-5.4.16-36.el7_1
+  when: ansible_distribution == "CentOS" and
+    BARC_use_non_system_package_sources == false or BARC_use_non_system_package_sources == 'False'
+
+- name: install PHP-FPM for PHP 5 from system sources - Ubuntu
+  apt:
+                 pkg={{ item }}
+        update_cache=yes
+    cache_valid_time=3600
+               state=present
+  with_items:
+  - php5-fpm
+  when: ansible_distribution == "Ubuntu" and
+    BARC_use_non_system_package_sources == false or BARC_use_non_system_package_sources == 'False'

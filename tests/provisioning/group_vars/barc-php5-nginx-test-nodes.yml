@@ -1,0 +1,5 @@
+---
+# These variables override those defined by roles
+
+# PHP5 specific variables
+php5_use_xdebug: true

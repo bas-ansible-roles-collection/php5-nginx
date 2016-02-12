@@ -1,0 +1,58 @@
+---
+# Tests PHP-FPM is installed correctly
+
+# If using non-system sources (preferred)
+
+- name: determine if PHP-FPM is installed using non-system packages - CentOS
+  command: rpm -qa
+  changed_when: False
+  register: php5_nginx_test_fact_php_fpm_non_system_packages_are_installed_centos
+  when: ansible_distribution == "CentOS" and
+    (BARC_use_non_system_package_sources == true or BARC_use_non_system_package_sources == 'True')
+- name: assert PHP-FPM is installed using non-system packages - CentOS
+  assert:
+    that:
+      - "'-fpm' in php5_nginx_test_fact_php_fpm_non_system_packages_are_installed_centos.stdout"
+  when: ansible_distribution == "CentOS" and
+    (BARC_use_non_system_package_sources == true or BARC_use_non_system_package_sources == 'True')
+
+- name: determine if PHP-FPM is installed using non-system packages - Ubuntu
+  command: dpkg -s php5-fpm
+  changed_when: False
+  register: php5_nginx_test_fact_php_fpm_non_system_packages_installed_ubuntu
+  when: ansible_distribution == "Ubuntu" and
+    (BARC_use_non_system_package_sources == true or BARC_use_non_system_package_sources == 'True')
+- name: assert PHP-FPM is installed using non-system packages - Ubuntu
+  assert:
+    that:
+      - "'install ok installed' in php5_nginx_test_fact_php_fpm_non_system_packages_installed_ubuntu.stdout"
+  when: ansible_distribution == "Ubuntu" and
+    (BARC_use_non_system_package_sources == true or BARC_use_non_system_package_sources == 'True')
+
+# If using system-sources only
+
+- name: determine if PHP-FPM is installed using system-only packages - CentOS
+  command: rpm -qa
+  changed_when: False
+  register: php5_nginx_test_fact_php_fpm_system_packages_only_are_installed
+  when: ansible_distribution == "CentOS" and
+    (BARC_use_non_system_package_sources == false or BARC_use_non_system_package_sources == 'False')
+- name: assert PHP-FPM is installed using system-only packages - CentOS
+  assert:
+    that:
+      - "'php-fpm-5' in php5_nginx_test_fact_php_fpm_system_packages_only_are_installed.stdout"
+  when: ansible_distribution == "CentOS" and
+    (BARC_use_non_system_package_sources == false or BARC_use_non_system_package_sources == 'False')
+
+- name: determine if PHP-FPM is installed using system-only packages - Ubuntu
+  command: dpkg -s php5-fpm
+  changed_when: False
+  register: php5_nginx_test_fact_php_fpm_system_only_packages_installed_ubuntu
+  when: ansible_distribution == "Ubuntu" and
+    (BARC_use_non_system_package_sources == false or BARC_use_non_system_package_sources == 'False')
+- name: assert PHP-FPM is installed using system-only packages - Ubuntu
+  assert:
+    that:
+      - "'install ok installed' in php5_nginx_test_fact_php_fpm_system_only_packages_installed_ubuntu.stdout"
+  when: ansible_distribution == "Ubuntu" and
+    (BARC_use_non_system_package_sources == false or BARC_use_non_system_package_sources == 'False')
