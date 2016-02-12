@@ -1,0 +1,28 @@
+---
+# Configures the PHP-FPM SAPI
+
+- name: create PHP configuration file for FPM SAPI - CentOS
+  command: cp /etc/php.ini /etc/php-fpm.ini creates=/etc/php-cli.ini
+  when: ansible_distribution == "CentOS"
+
+- name: configure FPM SAPI configuration file - CentOS
+  ini_file:
+       dest=/etc/php-fpm.ini
+    section='{{ item.0.section }}'
+     option='{{ item.1.option }}'
+      value='{{ item.1.value }}'
+  with_subelements:
+    - php5_nginx_sapi_fpm_options
+    - options
+  when: ansible_distribution == "CentOS"
+
+- name: configure FPM SAPI configuration file - Ubuntu
+  ini_file:
+       dest=/etc/php5/fpm/php.ini
+    section='{{ item.0.section }}'
+     option='{{ item.1.option }}'
+      value='{{ item.1.value }}'
+  with_subelements:
+    - php5_nginx_sapi_fpm_options
+    - options
+  when: ansible_distribution == "Ubuntu"

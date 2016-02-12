@@ -13,6 +13,7 @@ Bridging role to use PHP 5 with Nginx using PHP-FPM
 ## Overview
 
 * Installs the latest stable version of PHP-FPM from non-system, or optionally, from system only sources
+* Configures the PHP configuration file for the CLI SAPI with safe and secure defaults
 
 ## Quality Assurance
 
@@ -83,6 +84,48 @@ respected individual. If this is for some reason unsuitable, it is possible to o
 Note: As the package policy varies between system and non-system package sources, and between operating systems, the 
 version of installed packages is variable.
 
+### PHP configuration files
+
+This role, will only configure options relevant to the `fpm` SAPI specifically.
+
+See the [PHP5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
+for more information on PHP configuration files.
+
+Settings for other SAPIs, such as the CLI, **SHOULD** be set in other roles, or project/purpose specific playbooks.
+Providing the Ansible INI module is used, setting additional INI options will not cause conflicts with this role and 
+so preserve idempotency.
+
+The configuration options set by this role are considered suitably generic and applicable to all situations such that 
+they are safe to be used as defaults - however it is accepted there are situations they would not be suitable. They 
+include options for:
+
+* Processing time and memory limits
+* Default timezone - localised to *Europe/London*
+* Error reporting and logging
+* Hiding the PHP version for security purposes
+
+See the *php5_nginx_sapi_fpm_options* variable in the role defaults file (`defaults/main.yml`) for the specific options 
+set. Where any of these options are unsuitable, override this variable with a copy of these defaults, omitting the 
+unsuitable options.
+
+### PHP extensions
+
+See the [PHP5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
+for more information on which extensions are enabled and how to control them.
+
+### Typical playbook
+
+```yaml
+---
+
+- name: install php 5, nginx and php-fpm
+  hosts: all
+  become: yes
+  vars: []
+  roles:
+    - bas-ansible-roles-collection.php5-nginx
+```
+
 ### Tags
 
 BARC roles use standardised tags to control which aspects of an environment are changed by roles.
@@ -106,6 +149,47 @@ More information is available in the
 * Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
 * See the *BARC roles manifest* section for more information
 * Example: `2.0.0`
+
+### *php5_nginx_sapi_fpm_options*
+
+**MAY** be specified.
+
+Specifies configuration options for the FPM (PHP-FPM) SAPI.
+
+Structured as a list of items, with each item having the following properties:
+
+* *section*
+    * **MUST** be specified
+    * Specifies the section of the INI configuration file options for this item belong to
+    * Values **MUST** be valid section names as determined by the INI configuration format
+* *options*
+    * **MAY** be specified
+    * Specifies the list of options, and values, to be set within the section set by the *section* item
+    * Structured as a list of sub-items, with each sub-item having the following properties
+        * *option*
+            * **MUST** be specified if any part of the sub-item is specified
+            * Specifies the *option* of the INI option/value pair
+            * Values **MUST** be valid option names as determined by the INI configuration format and **MUST** be valid
+            option names as determined by PHP
+        * *value*
+            * *MUST** be specified if any part of the sub-item is specified
+            * Specifies the *value* of the INI option/value pair
+            * Values **MUST** be valid values as determined by the INI configuration format and **MUST** be valid
+            option names as determined by PHP
+            * Boolean values **MUST** be quoted to prevent Ansible coercing values to True/False which is invalid for 
+            PHP configurations
+
+Example:
+
+```yml
+php5_nginx_sapi_fpm_options:
+  - section: "Resource Limits"
+    options:
+      - option: max_execution_time  # (seconds)
+        value: 30
+```
+
+Default: *See role defaults*
 
 ## Developing
 

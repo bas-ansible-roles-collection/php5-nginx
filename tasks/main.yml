@@ -6,6 +6,11 @@
     - BARC_INSTALL
     - BARC_INSTALL_PACKAGES
 
+- include: configure-sapi-fpm.yml
+  tags:
+    - BARC_CONFIGURE
+    - BARC_CONFIGURE_PACKAGE
+
 - include: register-role.yml
   tags:
     - BARC_ROLE_REGISTRATION
