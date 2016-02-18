@@ -31,10 +31,10 @@ barc-php5-nginx-test-centos-system-only.v.m
 barc-php5-nginx-test-ubuntu-bare.v.m
 barc-php5-nginx-test-centos-bare.v.m
 
-[barc-php5-nginx-system-packages-only]
+[barc-php5-nginx-test-system-packages-only]
 barc-php5-nginx-test-ubuntu-system-only.v.m
 barc-php5-nginx-test-centos-system-only.v.m
 
 [barc-php5-nginx-test-nodes:children]
 barc-php5-nginx-test-bare
-barc-php5-nginx-system-packages-only
+barc-php5-nginx-test-system-packages-only
