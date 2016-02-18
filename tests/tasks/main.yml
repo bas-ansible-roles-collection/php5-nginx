@@ -9,6 +9,8 @@
 
 - include: install-php-fpm.yml
 
+- include: configure-php-fpm.yml
+
 - include: configure-sapi-fpm.yml
 
 - include: register-role.yml

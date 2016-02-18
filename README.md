@@ -14,6 +14,7 @@ Bridging role to use PHP 5 with Nginx using PHP-FPM
 
 * Installs the latest stable version of PHP-FPM from non-system, or optionally, from system only sources
 * Configures the PHP configuration file for the CLI SAPI with safe and secure defaults
+* Configures the default PHP-FPM pool to be compatible with each supported operating system
 
 ## Quality Assurance
 
@@ -42,10 +43,51 @@ More information on role requirements is available in the
 
 ## Limitations
 
-* None
+* Some variables in this role cannot be easily overridden
+
+This specifically affects: *php5_nginx_fpm_www_pool_socket* and *php5_nginx_fpm_www_pool_options*.
+
+Values for these variables vary on each supported operating system and therefore cannot be defined as variables in 
+`defaults/main.yml` (which are universal). Ansible does not support conditionally importing additional variables at 
+the same priority of role 'defaults' (i.e. variables defined in `defaults/main.yml`), therefore these variables must be 
+set in `vars/` within this role, and conditionally loaded using the 
+[include_vars module](http://docs.ansible.com/ansible/include_vars_module.html).
+
+Variables set at this priority cannot be easily overridden in playbooks (i.e. using the `vars` option), or in variable 
+files (i.e. using the `vars_files` option). In fact only 'extra_vars' set on the command line can override variables of
+this precedence.
+
+Given the nature of these variables, it is not expected likely users will need (or want) to changes the values for these
+variables, and therefore the difficultly needed to override them is considered an acceptable, and not significant 
+limitation. However, if other variables need to be defined in this way this may need to revisited in the future.
+
+*This limitation is **NOT** considered to be significant. Solutions will **NOT** be actively pursued.*
+*Pull requests to address this will be considered.*
+
+See the 
+[Ansible Documentation](http://docs.ansible.com/ansible/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable) 
+for further details on variable precedence.
+
+See [BARC-93](https://jira.ceh.ac.uk/browse/BARC-93) for further details.
 
 More information on role requirements is available in the 
 [BARC General Documentation](https://antarctica.hackpad.com/BARC-Overview-and-Policies-SzcHzHvitkt#:h=Role-limitations)
+
+* FPM SAPI configuration options are not used on non-default FPM pools using CentOS
+
+This is a consequence of CentOS not having support for a FPM specific PHP configuration file. Instead options need to 
+be expressed in FPM pool configuration files.
+
+As this role only configures the default FPM pool, if additional pools are used these PHP options will not be applied.
+This role will intentionally not configure non-default FPM pools, therefore the user will need to ensure these options
+are applied outside this role.
+
+This is possible by replicating the relevant tasks performed by this role for the default pool.
+
+*This limitation is **NOT** considered to be significant. Solutions will NOT be actively pursued.*
+*Pull requests to address this will **NOT** be considered.*
+
+See [BARC-107](https://jira.ceh.ac.uk/browse/BARC-107) for further details.
 
 ## Usage
 
@@ -113,6 +155,20 @@ unsuitable options.
 See the [PHP5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
 for more information on which extensions are enabled and how to control them.
 
+### FPM pools
+
+PHP-FPM uses the concept of a pool to define different options, such as resources or security options for different 
+websites or applications used in a single web-server, or web-server virtual host.
+
+Each pool uses a separate pool configuration file, which can also contain options which affect PHP, but only within
+each pool.
+
+This role will configure the default pool, *www* only. This pool is configured to use a UNIX socket for accessing FPM
+with the relevant permissions.
+
+On CentOS systems FPM SAPI specific options are also set as it is not possible to do this using a dedicated PHP 
+configuration file. See the *PHP configuration files* sub-section for more information.
+
 ### Typical playbook
 
 ```yaml
@@ -149,6 +205,73 @@ More information is available in the
 * Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
 * See the *BARC roles manifest* section for more information
 * Example: `2.0.0`
+
+#### *php5_nginx_fpm_www_pool_socket*
+
+* **MAY** be specified
+* Specifies the location to create the FPM UNIX socket
+* Values MUST be a valid system socket path, as determined by the operating system
+* Values **MUST** use absolute paths
+* The default value, which varies depending on the machine operating system, is a conventional default, other values
+**SHOULD NOT** be used without good reason
+* The default value for this variable is set as a role variable, rather than a role default variable, this has 
+implications if overriding this value, see the *Limitations* section for more information
+* Default:
+    * `/var/run/php-fpm/php-fpm.sock` - CentOS
+    * `/var/run/php-fpm.sock` - Ubuntu
+
+#### *php5_nginx_fpm_www_pool_options*
+
+**MAY** be specified.
+
+Specifies configuration options for the FPM default pool ('www').
+
+Structured as a list of items, with each item having the following properties:
+
+* Section
+  * **MUST** be specified
+  * Specifies the section of the INI configuration file options for this item belong to
+  * The section maps to the FPM pool to be configured
+  * Values **MUST** be valid pool identifiers as determined by PHP-FPM
+  * The default value for this variable is a conventional default, other values **SHOULD NOT** be used without good 
+  reason
+  * Example: `www`
+* Options
+    * **MAY** be specified
+    * Specifies the list of options, and values, to be set within the section (pool) set by the *section* item
+    * Structured as a list of sub-items, with each sub-item having the following properties:
+      * *option*
+            * **MUST** be specified if any part of the sub-item is specified
+            * Specifies the *option* of the pool option/value pair
+            * Values **MUST** be valid option names as determined by the INI configuration format and **MUST** be valid
+            option names as determined by PHP-FPM
+        * *value*
+            * **MUST** be specified if any part of the sub-item is specified
+            * Specifies the *value* of the pool option/value pair
+            * Values **MUST** be valid values as determined by the INI configuration format and **MUST** be valid
+            option names as determined by PHP-FPM
+            * Boolean values **MUST** be quoted to prevent Ansible coercing values to True/False which is invalid for 
+            PHP configurations
+
+The default value, which varies depending on the machine operating system, is a conventional default, other values
+**SHOULD NOT** be used without good reason.
+
+The default value for this variable is set as a role variable, rather than a role default variable, this has 
+implications if overriding this value, see the *Limitations* section for more information.
+
+Example:
+
+```yml
+php5_nginx_fpm_www_pool_options:
+  - section: "www"
+    options:
+      - option: listen.owner
+        value: www-data
+```
+
+Default:
+  * See `vars/CentOS.yml` - CentOS
+  * See `vars/Ubuntu.yml` - Ubuntu
 
 ### *php5_nginx_sapi_fpm_options*
 

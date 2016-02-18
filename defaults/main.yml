@@ -8,6 +8,9 @@ php5_nginx_barc_role_version: 0.1.0
 BARC_use_non_system_package_sources: true
 
 # PHP5 Nginx specific variables
+php5_nginx_fpm_www_pool_socket: ""
+php5_nginx_fpm_www_pool_options: []
+
 php5_nginx_sapi_fpm_options:
   - section: "Resource Limits"
     options:

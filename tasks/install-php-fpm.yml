@@ -46,3 +46,12 @@
   - php5-fpm
   when: ansible_distribution == "Ubuntu" and
     BARC_use_non_system_package_sources == false or BARC_use_non_system_package_sources == 'False'
+
+# Enable php-fpm service to start on system startup on CentOS
+
+- name: enable PHP-FPM service on startup - CentOS
+  service:
+       name=php-fpm
+    enabled=yes
+      state=started
+  when: ansible_distribution == "CentOS"

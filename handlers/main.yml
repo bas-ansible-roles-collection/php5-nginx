@@ -1,0 +1,12 @@
+---
+# Handlers for PHP5 Nginx
+
+- name: Restart PHP-FPM-CentOS
+  service:
+     name=php-fpm
+    state=restarted
+
+- name: Restart PHP-FPM-Ubuntu
+  service:
+     name=php5-fpm
+    state=restarted
