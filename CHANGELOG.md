@@ -7,6 +7,8 @@ Note: Developers - make sure to set the `BARC_role_version` variable when releas
 
 ## [Unreleased][unreleased]
 
+## 0.1.0 - 18/02/2016
+
 ### Added
 
 * Initial version
