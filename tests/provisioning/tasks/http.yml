@@ -1,0 +1,32 @@
+---
+# Creates a http server block for use when testing
+
+- name: ensure document root directory exists and has correct owner and permissions
+  file:
+     path="{{ webserver_virtual_hosts_document_root }}"
+    owner="{{ nginx_config_core_user }}"
+    group="{{ nginx_config_core_user }}"
+     mode=0775
+    state=directory
+
+- name: ensure document root files exist and have correct owner and permissions
+  copy:
+      src="data/var/www/html/{{ item }}"
+     dest="{{ webserver_virtual_hosts_document_root }}/{{ item }}"
+    owner="{{ nginx_config_core_user }}"
+    group="{{ nginx_config_core_user }}"
+     mode=0664
+  with_items:
+    - index.php
+
+- name: generate http server block definition file
+  template:
+     src=../roles/bas-ansible-roles-collection.nginx/templates/etc/nginx/sites-available/server-block-http.j2
+    dest=/etc/nginx/sites-available/test-http
+
+- name: enable http server block
+  file:
+      src=/etc/nginx/sites-available/test-http
+     dest=/etc/nginx/sites-enabled/test-http
+    state=link
+  notify: Restart Nginx

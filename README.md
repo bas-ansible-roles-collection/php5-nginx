@@ -15,6 +15,7 @@ Bridging role to use PHP 5 with Nginx using PHP-FPM
 * Installs the latest stable version of PHP-FPM from non-system, or optionally, from system only sources
 * Configures the PHP configuration file for the CLI SAPI with safe and secure defaults
 * Configures the default PHP-FPM pool to be compatible with each supported operating system
+* Configures Nginx server blocks to use PHP-FPM for processing relevant resources (i.e. PHP files)
 
 ## Quality Assurance
 
@@ -185,6 +186,24 @@ This is considered a limitation, see the *Limitations* section for more informat
 See the [PHP5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
 for more information on which extensions are enabled and how to control them.
 
+### Nginx
+
+This role will only configure Nginx to support integrating with PHP-FPM.
+
+See the [Nginx](https://galaxy.ansible.com/bas-ansible-roles-collection/nginx/) role, on which this role depends, 
+for more information on how Nginx is installed and configured more generally.
+
+This role will create additional configuration files intended to be loaded within server blocks. These additional
+configuration files will be loaded automatically by server block templates provided by the Nginx role, if used.
+
+Additional configuration files included in this role:
+
+* In server block templates:
+  * `php-fpm.conf` - Proxies requests to PHP-FPM via the Fast CGI protocol for relevant requests (i.e. for PHP pages)
+  * `fastcgi-params.conf` - Maps HTTP headers to Fast CGI parameters
+
+More information on these additional sections may be provided in other sub-sections in this README.
+
 ### FPM pools
 
 PHP-FPM uses the concept of a pool to define different options, such as resources or security options for different 
@@ -235,6 +254,19 @@ More information is available in the
 * Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
 * See the *BARC roles manifest* section for more information
 * Example: `2.0.0`
+
+### *webserver_virtual_hosts_document_indexes*
+
+* **MAY** be specified
+* Specifies a list of files that will be used as an index document
+* Structured as a list of items, with each item having the following properties:
+    * Item values **MUST** be valid file names, including any file extension, as determined by the web server
+* The default item values, are conventional defaults, other values **SHOULD NOT** be used without good reason
+* Defaults:
+```
+- index.html
+- index.php
+```
 
 #### *php5_nginx_fpm_www_pool_socket*
 

@@ -13,6 +13,8 @@
 
 - include: configure-sapi-fpm.yml
 
+- include: configure-nginx.yml
+
 - include: register-role.yml
 
 # Registration checks
