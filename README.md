@@ -70,6 +70,29 @@ for further details on variable precedence.
 
 See [BARC-93](https://jira.ceh.ac.uk/browse/BARC-93) for further details.
 
+* On CentOS the FPM SAPI cannot be configured using a typical php.ini file
+
+The configuration file used by the FPM SAPI is set when PHP is compiled, and offers no configuration option to change 
+this (presumably for security reasons). As we do not want to change the default PHP configuration file, or configure 
+PHP to read from a non-default file (since this would just become the new default file just with a non-default name),
+we need to adopt a different approach.
+
+Within PHP-FPM, pools can set PHP configuration options, on a per-pool basis. This role will configure the default 
+`www` pool in this way, setting the options we need. Since there typically aren't that many options being set this is
+considered acceptable for the time being.
+
+Whilst this works it introduces a new limitation in that users are forced to use the default FPM pool, unless they also 
+set any PHP configurations options in additional pools as well. Since this role intentionally does not modify 
+non-default FPM pools, this is left to the end-user to perform.
+
+On Ubuntu PHP-FPM uses a `/etc/php5/fpm/php.ini` file as per its conventions (i.e. `/etc/php5/[SAPI]/php.ini`) and so
+this is not a problem.
+
+*This limitation is considered to be significant. Solutions will be actively pursued.*
+*Pull requests to address this will be gratefully considered and given priority.*
+
+See [BARC-106](https://jira.ceh.ac.uk/browse/BARC-106) for further details.
+
 More information on role requirements is available in the 
 [BARC General Documentation](https://antarctica.hackpad.com/BARC-Overview-and-Policies-SzcHzHvitkt#:h=Role-limitations)
 
@@ -128,7 +151,7 @@ version of installed packages is variable.
 
 ### PHP configuration files
 
-This role, will only configure options relevant to the `fpm` SAPI specifically.
+This role will only configure options relevant to the `fpm` SAPI.
 
 See the [PHP5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
 for more information on PHP configuration files.
@@ -149,6 +172,13 @@ include options for:
 See the *php5_nginx_sapi_fpm_options* variable in the role defaults file (`defaults/main.yml`) for the specific options 
 set. Where any of these options are unsuitable, override this variable with a copy of these defaults, omitting the 
 unsuitable options.
+
+On CentOS there is no FPM specific PHP configuration file available, and it is not possible to create one.
+Instead PHP configurations are set in the default FPM pool configuration file using `php_value` and `php_flag`.
+This requires a 'type' (value or flag) to be stored for each PHP configuration option, which this role will use to
+select the appropriate configuration directive. See the *FPM pools* sub-section for more information on FPM pools.
+
+This is considered a limitation, see the *Limitations* section for more information.
 
 ### PHP extensions
 
@@ -295,12 +325,20 @@ Structured as a list of items, with each item having the following properties:
             * Values **MUST** be valid option names as determined by the INI configuration format and **MUST** be valid
             option names as determined by PHP
         * *value*
-            * *MUST** be specified if any part of the sub-item is specified
+            * **MUST** be specified if any part of the sub-item is specified
             * Specifies the *value* of the INI option/value pair
             * Values **MUST** be valid values as determined by the INI configuration format and **MUST** be valid
             option names as determined by PHP
             * Boolean values **MUST** be quoted to prevent Ansible coercing values to True/False which is invalid for 
             PHP configurations
+        * *type*
+          * **MUST** be specified if any part of the sub-item is specified
+          * Specifies whether the *value* for each sub-item is a 'value' (such as '12') or a 'flag' (such as ON)
+          * This is required for choosing the appropriate PHP-FPM pool directive for setting PHP options on CentOS
+          * Values **MUST** be valid values as determined by PHP-FPM
+          * Values **MUST** use one of these options, as determined by PHP-FPM
+            * `value`
+            * `flag`
 
 Example:
 

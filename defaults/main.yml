@@ -16,25 +16,34 @@ php5_nginx_sapi_fpm_options:
     options:
       - option: max_execution_time  # (seconds)
         value: 30
+        type: value
       - option: max_input_time  # (seconds)
         value: 60
+        type: value
       - option: memory_limit
         value: 128M
+        type: value
   - section: "Error handling and logging"
     options:
       - option: error_reporting
         value: "E_ALL & ~E_DEPRECATED"
+        type: value
       - option: display_errors
         value: "On"
+        type: flag
       - option: display_startup_errors
         value: "Off"
+        type: flag
       - option: log_errors
         value: "On"
+        type: flag
   - section: "Module Settings"
     options:
       - option: date.timezone
         value: "Europe/London"
+        type: value
   - section: "PHP"
     options:
       - option: expose_php
         value: "Off"
+        type: flag
