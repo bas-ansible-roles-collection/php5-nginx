@@ -25,11 +25,15 @@ Playbooks, host variables and other support files are kept in this `tests` direc
 
 A single scenario is tested using *Continuous Integration*:
 
-* Role is applied which will apply all dependent roles with their default variables
+* Installs PHP-FPM from role default package sources, configures the PHP-FPM SAPI and applies dependent 
+roles with their default variables
 
 Multiple scenarios are tested *manually*:
 
-1. `test-bare` - Role is applied which will apply all dependent roles with their default variables
+1. `test-bare` - Installs PHP-FPM from role default package sources, configures the PHP-FPM SAPI and applies dependent 
+roles with their default variables
+2. `test-bare` - Installs PHP-FPM from system package sources only, configures the PHP-FPM SAPI and applies dependent 
+roles with their default variables
 
 Note: Multiple scenarios may be run within the same VM, providing they do not overlap.
 

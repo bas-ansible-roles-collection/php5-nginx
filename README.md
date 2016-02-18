@@ -9,7 +9,7 @@ Develop:
 Bridging role to use PHP 5 with Nginx using PHP-FPM
 
 **Part of the BAS Ansible Role Collection (BARC)**
-
+ 
 ## Overview
 
 * Installs the latest stable version of PHP-FPM from non-system, or optionally, from system only sources
@@ -154,7 +154,7 @@ version of installed packages is variable.
 
 This role will only configure options relevant to the `fpm` SAPI.
 
-See the [PHP5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
+See the [php5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
 for more information on PHP configuration files.
 
 Settings for other SAPIs, such as the CLI, **SHOULD** be set in other roles, or project/purpose specific playbooks.
@@ -183,7 +183,7 @@ This is considered a limitation, see the *Limitations* section for more informat
 
 ### PHP extensions
 
-See the [PHP5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
+See the [php5](https://galaxy.ansible.com/bas-ansible-roles-collection/php5/) role, on which this role depends, 
 for more information on which extensions are enabled and how to control them.
 
 ### Nginx
@@ -223,7 +223,7 @@ configuration file. See the *PHP configuration files* sub-section for more infor
 ```yaml
 ---
 
-- name: install php 5, nginx and php-fpm
+- name: install PHP 5, Nginx and PHP-FPM
   hosts: all
   become: yes
   vars: []
@@ -254,6 +254,18 @@ More information is available in the
 * Specifies the name of this role within the BAS Ansible Roles Collection (BARC) used for setting local facts
 * See the *BARC roles manifest* section for more information
 * Example: `2.0.0`
+
+### *BARC_use_non_system_package_sources*
+
+* **MAY** be specified
+* Specifies whether non-system sources can be used to install packages
+* Note: This variable is scoped to all other BARC roles which install packages from non-system sources
+* Values MUST use one of these options, as determined by Ansible:
+    * `true`
+    * `false`
+* Values **SHOULD NOT** be quoted to prevent Ansible coercing values to a string
+* Where not specified, a value of `true` will be assumed
+* Default: `true`
 
 ### *webserver_virtual_hosts_document_indexes*
 

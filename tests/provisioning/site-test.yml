@@ -5,7 +5,7 @@
 # host-vars are used to control which features of the role are applied to each VM.
 # For each test a set of tasks will be run to check the selected features of roles are correctly applied.
 
-- name: setup and test PHP5 with nginx using PHP-FPM
+- name: setup and test PHP5 with Nginx using PHP-FPM
   hosts: barc-php5-nginx-test-nodes
   remote_user: controller
   become: yes
@@ -13,4 +13,5 @@
     - bas-ansible-roles-collection.system-core
     - ../../../php5-nginx
   tasks:
+    - include: tasks/http.yml
     - include: ../tasks/main.yml
